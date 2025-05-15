@@ -16,19 +16,20 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}  # Tipos de archivos p
 CORS(app)
 
 # 🔑 Tu clave API de OpenAI (reemplaza por la tuya si la cambiaste)
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# 🔌 Conexión a MongoDB
+if not openai.api_key:
+    raise ValueError("La variable de entorno OPENAI_API_KEY no está definida.")
+
+mongo_uri = "mongodb+srv://despliegueeasy:1234@farmway.p2fsn5c.mongodb.net/?retryWrites=true&w=majority&appName=FarmWay"
+
 try:
-    mongo_uri = os.environ.get("MONGO_URI")
-    if mongo_uri:
-        client = MongoClient(mongo_uri)
-    else:
-        client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient(mongo_uri)
     db = client["shoppingDB"]
     print("✅ Conectado a MongoDB correctamente.")
 except Exception as e:
     print("❌ Error al conectar a MongoDB:", e)
+    raise
 
 # 🔐 Configuración de Flask-Login
 login_manager = LoginManager()
