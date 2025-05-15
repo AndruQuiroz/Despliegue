@@ -20,7 +20,11 @@ openai.api_key = "sk-proj-nKLrlrV3o-WmmeM-_DTtptREw7qL_KgLa71YbqZuBtLsBaFhqdjkYV
 
 # 🔌 Conexión a MongoDB
 try:
-    client = MongoClient("mongodb://localhost:27017/")
+    mongo_uri = os.environ.get("MONGO_URI")
+    if mongo_uri:
+        client = MongoClient(mongo_uri)
+    else:
+        client = MongoClient("mongodb://localhost:27017/")
     db = client["shoppingDB"]
     print("✅ Conectado a MongoDB correctamente.")
 except Exception as e:
