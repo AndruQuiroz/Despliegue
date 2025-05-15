@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmWay - Publicar Producto</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            transition: margin-left 0.3s;
+            background-color: #f4f4f9;
+        }
+
+        /* Barra superior */
+        .top-nav {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .menu-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .menu-btn i {
+            margin-right: 5px;
+        }
+
+        /* Logo */
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            text-decoration: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo .farm {
+            color: white;
+        }
+
+        .logo .way {
+            color: #4CAF50;
+        }
+
+        /* Menú lateral */
+        .sidebar {
+            width: 50px;
+            background-color: #4CAF50;
+            position: fixed;
+            top: 60px;
+            left: -50px;
+            height: calc(100vh - 60px);
+            transition: all 0.3s;
+            z-index: 999;
+            overflow-x: hidden;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .menu-item {
+            color: white;
+            padding: 15px 5px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            margin-top: 60px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar.open ~ .main-content {
+            margin-left: 50px;
+        }
+
+        /* Estilos del formulario de publicación */
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .form-container button {
+            width: 48%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 2%;
+        }
+
+        .form-container button:hover {
+            background-color: #218838;
+        }
+
+        .form-container .generate-btn {
+            width: 48%;
+            background-color: #ff9800;
+        }
+
+        .form-container .generate-btn:hover {
+            background-color: #e68900;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <button class="menu-btn" id="menuToggle">
+            <i class="fas fa-bars"></i><span>Menú</span>
+        </button>
+
+        <a href="#" class="logo">
+            <span class="farm">Farm</span><span class="way">Way</span>
+        </a>
+    </div>
+
+    <!-- Menú Lateral -->
+    <div class="sidebar" id="sidebar">
+        <a href="/" class="menu-item"><i class="fas fa-home"></i> Página Principal</a>
+        <a href="/publish" class="menu-item"><i class="fas fa-upload"></i> Publicar Producto</a>
+        <a href="/auctions" class="menu-item"><i class="fas fa-gavel"></i> Subastas</a>
+        <a href="/profile" class="menu-item"><i class="fas fa-user"></i> Perfil</a>
+        <a href="{{ url_for('historial_compras') }}" class="menu-item"><i class="fas fa-history"></i> Historial de Compras</a>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
+      
+
+        <!-- Formulario de Publicación -->
+        <div class="form-container">
+            <form action="/publish" method="POST" enctype="multipart/form-data">
+                <label for="name">Nombre del Producto:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="description">Descripción:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="price">Precio:</label>
+                <input type="number" id="price" name="price" required>
+
+                <label for="image">Imagen (Sube un archivo o genera uno con IA):</label>
+                <input type="file" id="image" name="image" accept="image/png, image/jpeg">
+
+                <!-- Botón para Publicar el Producto -->
+                <button type="submit">Publicar Producto</button>
+
+                <!-- Botón para Generar Imagen -->
+                <button type="button" class="generate-btn" onclick="generateImage()">Generar Imagen</button>
+            </form>            
+        </div>
+    </div>
+
+    <script>
+        // JavaScript para alternar el menú lateral
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+
+        // Función para generar imagen con IA y luego proceder con la publicación
+        function generateImage() {
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+
+            if (name && description) {
+                fetch('/generate_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: name, description: description })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Si la imagen es generada, el servidor responderá con la ruta de la imagen
+                    if (data.imagePath) {
+                        // Aquí puede insertar la ruta de la imagen generada automáticamente en el formulario
+                        alert('Imagen generada con éxito y lista para publicar!');
+                        document.getElementById('image').value = data.imagePath;
+                    } else {
+                        alert('Hubo un error generando la imagen.');
+                    }
+                });
+            } else {
+                alert('Por favor ingresa el nombre y la descripción del producto primero.');
+            }
+        }
+    </script>
+</body>
+</html>

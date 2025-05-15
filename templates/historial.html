@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Recomendaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🗂️ Historial de Recomendaciones</h1>
+
+        {% if historial %}
+            {% for item in historial %}
+            <div class="alert" style="background-color: #f1f1f1; margin-bottom: 20px; padding: 20px; border-radius: 8px;">
+                <p><strong>📅 Fecha:</strong> {{ item.fecha.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p><strong>🧠 Análisis:</strong><br>{{ item.resumen }}</p>
+                <p><strong>🎯 Recomendaciones:</strong></p>
+                <ul>
+                    {% for r in item.recomendaciones %}
+                        <li>{{ r }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay recomendaciones registradas aún.</p>
+        {% endif %}
+
+        <a href="/">⬅ Volver al inicio</a>
+    </div>
+</body>
+</html>

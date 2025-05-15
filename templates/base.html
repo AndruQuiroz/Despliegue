@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmWay</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            transition: margin-left 0.3s;
+        }
+
+        /* Barra superior */
+        .top-nav {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        /* Botón de menú */
+        .menu-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .menu-btn i {
+            margin-right: 5px;
+        }
+
+        /* Logo */
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            text-decoration: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo .farm {
+            color: white;
+        }
+
+        .logo .way {
+            color: #4CAF50;
+        }
+
+        /* Botones de autenticación */
+        .auth-buttons {
+            margin-left: auto;
+        }
+
+        .auth-buttons a {
+            margin-left: 10px;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .auth-buttons .login {
+            border: 1px solid #fff;
+            color: white;
+        }
+
+        .auth-buttons .register {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .auth-buttons .logout {
+            border: 1px solid #fff;
+            color: white;
+        }
+
+        /* Menú lateral */
+        .sidebar {
+            width: 50px;
+            background-color: #4CAF50;
+            position: fixed;
+            top: 60px;
+            left: -50px;
+            height: calc(100vh - 60px);
+            transition: all 0.3s;
+            z-index: 999;
+            overflow-x: hidden;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .menu-item {
+            color: white;
+            padding: 15px 5px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            margin-top: 60px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar.open ~ .main-content {
+            margin-left: 50px;
+        }
+
+        /* Estilos para los productos */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .product img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product h3 {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .product p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .buy-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .buy-button:hover {
+            background-color: #218838;
+        }
+
+        /* Estilos para dispositivos móviles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                left: -100%;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .sidebar.open ~ .main-content {
+                margin-left: 0;
+            }
+
+            .menu-item {
+                flex-direction: row;
+                padding: 15px 20px;
+                font-size: 16px;
+            }
+
+            .menu-item i {
+                margin-right: 15px;
+                margin-bottom: 0;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <button class="menu-btn" id="menuToggle">
+            <i class="fas fa-bars"></i><span>Menú</span>
+        </button>
+
+        <a href="#" class="logo">
+            <span class="farm">Farm</span><span class="way">Way</span>
+        </a>
+
+        <div class="auth-buttons">
+            <a href="/login" class="login">Iniciar sesión</a>
+            <a href="/register" class="register">Registrarse</a>
+        </div>
+    </div>
+
+    <!-- Menú Lateral -->
+    <div class="sidebar" id="sidebar">
+        <a href="/" class="menu-item"><i class="fas fa-home"></i> Página Principal</a>
+        <a href="/products" class="menu-item"><i class="fas fa-cogs"></i> Productos</a> <!-- Nueva opción -->
+        <a href="/publish" class="menu-item"><i class="fas fa-upload"></i> Publicar Producto</a>
+        <a href="/auctions" class="menu-item"><i class="fas fa-gavel"></i> Subastas</a>
+        <a href="/profile" class="menu-item"><i class="fas fa-user"></i> Perfil</a>
+        <a href="{{ url_for('historial_compras') }}" class="menu-item"><i class="fas fa-history"></i> Historial de Compras</a>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
+        <h2>Bienvenido a FarmWay</h2>
+        <p>Seleccione una opción del menú para empezar.</p>
+        <!-- Mostrar productos cuando se hace clic en el botón de comprar -->
+        <div class="products">
+            {% for product in products %}
+                <div class="product">
+                    <img src="{{ product['image'] }}" alt="{{ product['name'] }}">
+                    <h3>{{ product['name'] }}</h3>
+                    <p>{{ product['description'] }}</p>
+                    <p>${{ product['price'] }}</p>
+                    <button class="buy-button">Comprar</button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // JavaScript para alternar el menú lateral
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>

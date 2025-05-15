@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Ofertas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Ofertas Publicadas</h1>
+
+        {% if pending_bids %}
+            <div class="alert">
+                ⚠ Hay {{ pending_bids|length }} ofertas pendientes de revisión.
+            </div>
+        {% endif %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subasta</th>
+                    <th>Oferta</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bid in bids %}
+                <tr>
+                    <td>{{ bid.auctionId }}</td>
+                    <td>${{ bid.amount }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('update_status') }}">
+                            <input type="hidden" name="auctionId" value="{{ bid.auctionId }}">
+                            <select name="status">
+                                <option value="Ganada" {% if bid.status == "Ganada" %}selected{% endif %}>Ganada</option>
+                                <option value="Perdida" {% if bid.status == "Perdida" %}selected{% endif %}>Perdida</option>
+                                <option value="Pendiente" {% if bid.status == "Pendiente" %}selected{% endif %}>Pendiente</option>
+                            </select>
+                            <button type="submit">Actualizar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="/">Volver al Inicio</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Subasta - FarmWay</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f9;
+            padding-top: 80px;
+        }
+
+        /* Barra de navegación superior */
+        .top-nav {
+            background-color: #000;
+            color: white;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 999;
+            height: 60px;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo .farm {
+            color: #4CAF50;
+        }
+
+        .logo .way {
+            color: white;
+        }
+
+        /* Menú lateral */
+        .sidebar {
+            width: 50px;
+            background-color: #4CAF50;
+            position: fixed;
+            top: 60px;
+            left: -50px;
+            height: calc(100vh - 60px);
+            transition: all 0.3s;
+            z-index: 999;
+            overflow-x: hidden;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .menu-item {
+            color: white;
+            padding: 15px 10px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-item:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            padding: 30px;
+            margin-left: 60px;
+        }
+
+        /* Formulario de creación de subasta */
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 70%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="number"],
+        .form-container textarea,
+        .form-container input[type="file"],
+        .form-container input[type="datetime-local"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-container input[type="file"] {
+            padding: 8px;
+        }
+
+        .form-container .form-right {
+            width: 45%;
+            padding: 20px;
+            border-left: 2px solid #ccc;
+        }
+
+        .form-container .form-left {
+            width: 45%;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #218838;
+        }
+
+        /* Vista previa */
+        .preview {
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .preview h3 {
+            margin-top: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .preview p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Estilos de los botones */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Carrusel de imágenes */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-top: 20px;
+        }
+
+        .carousel-images {
+            display: flex;
+            overflow: hidden;
+            max-height: 300px;
+        }
+
+        .carousel-images img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 2;
+        }
+
+        .carousel-button-left {
+            left: 10px;
+        }
+
+        .carousel-button-right {
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de navegación -->
+    <div class="top-nav">
+        <a href="/" class="logo">
+            <span class="farm">Farm</span><span class="way">Way</span>
+        </a>
+    </div>
+
+    <!-- Menú lateral -->
+    <div class="sidebar" id="sidebar">
+        <a href="/base" class="menu-item">Página Principal</a>
+        <a href="/publish" class="menu-item">Publicar Producto</a>
+        <a href="/auctions" class="menu-item">Subastas</a>
+        <a href="/profile" class="menu-item">Perfil</a>
+    </div>
+
+    <!-- Formulario para crear una subasta -->
+    <div class="main-content">
+        <div class="form-container">
+            <!-- Formulario de creación -->
+            <div class="form-left">
+                <h2>Crear Nueva Subasta</h2>
+                <form id="auctionForm" action="/create_auction" method="POST" enctype="multipart/form-data">
+                    <label for="name">Nombre del Producto:</label>
+                    <input type="text" id="name" name="name" required oninput="updatePreview()">
+
+                    <label for="description">Descripción:</label>
+                    <textarea id="description" name="description" required oninput="updatePreview()"></textarea>
+
+                    <label for="initial_price">Precio Inicial:</label>
+                    <input type="number" id="initial_price" name="initial_price" required oninput="updatePreview()">
+
+                    <label for="start_date">Fecha de Inicio:</label>
+                    <input type="datetime-local" id="start_date" name="start_date" required oninput="updatePreview()">
+
+                    <label for="end_date">Fecha de Finalización:</label>
+                    <input type="datetime-local" id="end_date" name="end_date" required oninput="updatePreview()">
+
+                    <label for="images">Imágenes del Producto:</label>
+                    <input type="file" id="images" name="images" multiple accept="image/*" required onchange="updatePreview()">
+                    
+                    <button type="submit">Crear Subasta</button>
+                </form>
+            </div>
+
+            <!-- Vista previa -->
+            <div class="form-right">
+                <div class="preview">
+                    
+                    <div id="carouselContainer" class="carousel-container">
+                        <div class="carousel-images" id="carouselImages">
+                            <!-- Imágenes del carrusel se agregarán aquí -->
+                        </div>
+                    </div>
+
+                    <h3 id="previewName">Nombre del Producto</h3>
+                    <p id="previewDescription">Descripción del producto</p>
+                    <p><strong>Precio Inicial:</strong> $<span id="previewPrice">0</span></p>
+                    <p><strong>Fechas:</strong> <span id="previewStartDate">Fecha inicio</span> - <span id="previewEndDate">Fecha fin</span>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentImageIndex = 0;
+        let imagesArray = [];
+
+        function updatePreview() {
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('initial_price').value;
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+            const images = document.getElementById('images').files;
+            
+            // Actualizar el texto de la vista previa
+            document.getElementById('previewName').innerText = name || 'Nombre del Producto';
+            document.getElementById('previewDescription').innerText = description || 'Descripción del producto';
+            document.getElementById('previewPrice').innerText = price || '0';
+            document.getElementById('previewStartDate').innerText = startDate || 'Fecha inicio';
+            document.getElementById('previewEndDate').innerText = endDate || 'Fecha fin';
+            
+            // Guardar las imágenes seleccionadas
+            imagesArray = [];
+            const previewImages = document.getElementById('carouselImages');
+            previewImages.innerHTML = '';  // Limpiar las imágenes anteriores
+            for (let i = 0; i < images.length; i++) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(images[i]);
+                img.alt = `Imagen ${i + 1}`;
+                img.style.width = '100%';
+                previewImages.appendChild(img);
+                imagesArray.push(img);
+            }
+        }
+
+
+        // Actualizar el carrusel
+        function updateCarousel() {
+            const carouselImages = document.getElementById('carouselImages');
+            const images = carouselImages.children;
+            for (let i = 0; i < images.length; i++) {
+                images[i].style.transform = `translateX(-${currentImageIndex * 100}%)`;
+            }
+        }
+    </script>
+
+</body>
+</html>
